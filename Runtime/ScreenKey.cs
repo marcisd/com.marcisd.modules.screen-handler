@@ -14,7 +14,7 @@ namespace MSD.Modules.ScreenHandler
 	{
 		private static readonly string DEBUG_PREPEND = $"[{nameof(ScreenKey)}]";
 
-		private ScreenHandler _screenHandler = null;
+		private ScreenHandler _screenHandler;
 
 		public void ShowScreen()
 		{

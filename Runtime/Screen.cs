@@ -17,12 +17,13 @@ namespace MSD.Modules.ScreenHandler
 	[RequireComponent(typeof(CanvasGroup))]
 	public class Screen : MonoBehaviour, IScreen
 	{
+		[SerializeField]
+		private bool _shouldManualInvokeCompleteEvents;
+
 		public event Action OnShow = delegate { };
 		public event Action OnShowComplete = delegate { };
 		public event Action OnHide = delegate { };
 		public event Action OnHideComplete = delegate { };
-
-		public bool shouldManualInvokeCompleteEvents;
 
 		[SerializeField]
 		private UnityEvent _onShow;
@@ -45,7 +46,7 @@ namespace MSD.Modules.ScreenHandler
 		public virtual void Show()
 		{
 			OnShow?.Invoke();
-			if (!shouldManualInvokeCompleteEvents) { InvokeShowComplete(); }
+			if (!_shouldManualInvokeCompleteEvents) { InvokeShowComplete(); }
 		}
 
 		public virtual void InvokeShowComplete()
@@ -56,7 +57,7 @@ namespace MSD.Modules.ScreenHandler
 		public virtual void Hide()
 		{
 			OnHide?.Invoke();
-			if (!shouldManualInvokeCompleteEvents) { InvokeHideComplete(); }
+			if (!_shouldManualInvokeCompleteEvents) { InvokeHideComplete(); }
 		}
 
 		public virtual void InvokeHideComplete()

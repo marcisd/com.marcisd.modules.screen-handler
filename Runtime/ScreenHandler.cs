@@ -22,7 +22,7 @@ namespace MSD.Modules.ScreenHandler
 		[SerializeField]
 		private ScreenDictionary _screensLookup = new ScreenDictionary();
 
-		private List<IScreen> _screenStack = new List<IScreen>();
+		private readonly List<IScreen> _screenStack = new List<IScreen>();
 		private List<Action> _onShowListenerCache = new List<Action>();
 		private List<Action> _onShowCompleteListenerCache = new List<Action>();
 		private List<Action> _onHideListenerCache = new List<Action>();
