@@ -30,6 +30,8 @@ namespace MSD.Modules.ScreenHandler
 		private List<Action> _onHideCompleteListenerCache = new List<Action>();
 		
 		public IScreen CurrentScreen => _screenStack.Count > 0 ? _screenStack[0] : null;
+
+
 		public Canvas ScreenCanvas => _screenCanvas == null ? _screenCanvas = GetComponent<Canvas>() : _screenCanvas;
 
 		/// <summary>
@@ -181,37 +183,37 @@ namespace MSD.Modules.ScreenHandler
 
 		private void OnShow(IScreen screen)
 		{
-			Debugger.Log(DEBUG_PREPEND, $"Show: {screen.gameObject.name}");
+			Debugger.Log(DEBUG_PREPEND, $"Show: {screen.GameObject.name}");
 			SetCanvasGroupInteractable(screen, false);
 			SetGameObjectActive(screen, true);
 		}
 
 		private void OnShowComplete(IScreen screen)
 		{
-			Debugger.Log(DEBUG_PREPEND, $"Show complete: {screen.gameObject.name}");
+			Debugger.Log(DEBUG_PREPEND, $"Show complete: {screen.GameObject.name}");
 			SetCanvasGroupInteractable(screen, true);
 		}
 
 		private void OnHide(IScreen screen)
 		{
-			Debugger.Log(DEBUG_PREPEND, $"Hide: {screen.gameObject.name}");
+			Debugger.Log(DEBUG_PREPEND, $"Hide: {screen.GameObject.name}");
 			SetCanvasGroupInteractable(screen, false);
 		} 
 
 		private void OnHideComplete(IScreen screen)
 		{
-			Debugger.Log(DEBUG_PREPEND, $"Hide complete: {screen.gameObject.name}");
+			Debugger.Log(DEBUG_PREPEND, $"Hide complete: {screen.GameObject.name}");
 			SetGameObjectActive(screen, false);
 		}
 
 		private void SetCanvasGroupInteractable(IScreen screen, bool value)
 		{
-			screen.canvasGroup.interactable = value;
+			screen.CanvasGroup.interactable = value;
 		}
 
 		private void SetGameObjectActive(IScreen screen, bool value)
 		{
-			screen.gameObject.SetActive(value);
+			screen.GameObject.SetActive(value);
 		}
 
 		#region MonoBehaviour
@@ -248,9 +250,9 @@ namespace MSD.Modules.ScreenHandler
 			foreach (KeyValuePair<ScreenKey, IScreen> screenPair in _screensLookup) {
 				IScreen screen = screenPair.Value;
 
-				if (screen.gameObject.IsPrefab()) {
-					GameObject newScreenGO = Instantiate(screen.gameObject, ScreenCanvas.transform);
-					newScreenGO.name = screen.gameObject.name;
+				if (screen.GameObject.IsPrefab()) {
+					GameObject newScreenGO = Instantiate(screen.GameObject, ScreenCanvas.transform);
+					newScreenGO.name = screen.GameObject.name;
 
 					IScreen newScreen = newScreenGO.GetComponent<IScreen>();
 					instantiatedScreens.Add(screenPair.Key, newScreen);

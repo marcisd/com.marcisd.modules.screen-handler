@@ -23,7 +23,7 @@ namespace MSD.Modules.ScreenHandler
 		void Show();
 		void Hide();
 
-		GameObject gameObject { get; }
-		CanvasGroup canvasGroup { get; }
+		GameObject GameObject { get; }
+		CanvasGroup CanvasGroup { get; }
 	}
 }

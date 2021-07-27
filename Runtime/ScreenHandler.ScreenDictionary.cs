@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 /*===============================================================
-Project:	Core Library
+Project:	Screen Handler
 Developer:	Marci San Diego
 Company:	Personal - marcisandiego@gmail.com
 Date:		27/09/2020 22:29

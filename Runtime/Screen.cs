@@ -25,19 +25,22 @@ namespace MSD.Modules.ScreenHandler
 		public bool isManualInvokeCompleteEvents = false;
 
 		[SerializeField]
-		private UnityEvent _onShow = null;
+		private UnityEvent _onShow;
 
 		[SerializeField]
-		private UnityEvent _onShowComplete = null;
+		private UnityEvent _onShowComplete;
 
 		[SerializeField]
-		private UnityEvent _onHide = null;
+		private UnityEvent _onHide;
 
 		[SerializeField]
-		private UnityEvent _onHideComplete = null;
+		private UnityEvent _onHideComplete;
 
-		private CanvasGroup _myCanvasGroup = null;
-		public CanvasGroup canvasGroup => _myCanvasGroup;
+		private CanvasGroup _canvasGroup;
+
+		public CanvasGroup CanvasGroup => _canvasGroup == null ? _canvasGroup = GetComponent<CanvasGroup>() : _canvasGroup;
+
+		public GameObject GameObject => gameObject;
 
 		public virtual void Show()
 		{
@@ -63,8 +66,6 @@ namespace MSD.Modules.ScreenHandler
 
 		protected virtual void Awake()
 		{
-			_myCanvasGroup = GetComponent<CanvasGroup>();
-
 			OnShow += _onShow.Invoke;
 			OnShowComplete += _onShowComplete.Invoke;
 			OnHide += _onHide.Invoke;

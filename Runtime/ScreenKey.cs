@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 /*===============================================================
-Project:    Peasyread
-Developer:  Admor Aguilar
-Company:    David Morgan Education - admora@dm-ed.com
+Project:	Screen Handler
+Developer:	Marci San Diego
+Company:	Personal - marcisandiego@gmail.com
 Date:       25/09/2019 19:08
 ===============================================================*/
 
