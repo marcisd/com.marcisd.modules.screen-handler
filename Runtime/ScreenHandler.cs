@@ -17,22 +17,22 @@ namespace MSD.Modules.ScreenHandler
 		private static readonly string DEBUG_PREPEND = $"[{nameof(ScreenHandler)}]";
 
 		[SerializeField]
-		private ScreenKey _startingScreenKey = null;
+		private ScreenKey _startingScreenKey;
 
 		[SerializeField]
 		private ScreenDictionary _screensLookup = new ScreenDictionary();
 
-		private Canvas _screenCanvas = null;
 		private List<IScreen> _screenStack = new List<IScreen>();
 		private List<Action> _onShowListenerCache = new List<Action>();
 		private List<Action> _onShowCompleteListenerCache = new List<Action>();
 		private List<Action> _onHideListenerCache = new List<Action>();
 		private List<Action> _onHideCompleteListenerCache = new List<Action>();
-		
+
+		private Lazy<Canvas> _canvasLazyLoader;
+
+		public Canvas ScreenCanvas => _canvasLazyLoader.Value;
+
 		public IScreen CurrentScreen => _screenStack.Count > 0 ? _screenStack[0] : null;
-
-
-		public Canvas ScreenCanvas => _screenCanvas == null ? _screenCanvas = GetComponent<Canvas>() : _screenCanvas;
 
 		/// <summary>
 		/// Hides all Screen and shows one by screenKey.
@@ -220,6 +220,7 @@ namespace MSD.Modules.ScreenHandler
 
 		private void Awake()
 		{
+			_canvasLazyLoader = new Lazy<Canvas>(() => GetComponent<Canvas>());
 			InstantiatePrefabScreens();
 		}
 

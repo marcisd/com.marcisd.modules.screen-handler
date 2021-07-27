@@ -22,7 +22,7 @@ namespace MSD.Modules.ScreenHandler
 		public event Action OnHide = delegate { };
 		public event Action OnHideComplete = delegate { };
 
-		public bool isManualInvokeCompleteEvents = false;
+		public bool shouldManualInvokeCompleteEvents;
 
 		[SerializeField]
 		private UnityEvent _onShow;
@@ -36,16 +36,16 @@ namespace MSD.Modules.ScreenHandler
 		[SerializeField]
 		private UnityEvent _onHideComplete;
 
-		private CanvasGroup _canvasGroup;
+		private Lazy<CanvasGroup> _canvasGroupLazyLoader;
 
-		public CanvasGroup CanvasGroup => _canvasGroup == null ? _canvasGroup = GetComponent<CanvasGroup>() : _canvasGroup;
+		public CanvasGroup CanvasGroup => _canvasGroupLazyLoader.Value;
 
 		public GameObject GameObject => gameObject;
 
 		public virtual void Show()
 		{
 			OnShow?.Invoke();
-			if (!isManualInvokeCompleteEvents) { InvokeShowComplete(); }
+			if (!shouldManualInvokeCompleteEvents) { InvokeShowComplete(); }
 		}
 
 		public virtual void InvokeShowComplete()
@@ -56,7 +56,7 @@ namespace MSD.Modules.ScreenHandler
 		public virtual void Hide()
 		{
 			OnHide?.Invoke();
-			if (!isManualInvokeCompleteEvents) { InvokeHideComplete(); }
+			if (!shouldManualInvokeCompleteEvents) { InvokeHideComplete(); }
 		}
 
 		public virtual void InvokeHideComplete()
@@ -66,6 +66,8 @@ namespace MSD.Modules.ScreenHandler
 
 		protected virtual void Awake()
 		{
+			_canvasGroupLazyLoader = new Lazy<CanvasGroup>(() => GetComponent<CanvasGroup>());
+
 			OnShow += _onShow.Invoke;
 			OnShowComplete += _onShowComplete.Invoke;
 			OnHide += _onHide.Invoke;
