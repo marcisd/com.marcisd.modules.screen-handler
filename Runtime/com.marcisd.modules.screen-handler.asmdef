@@ -1,0 +1,17 @@
+{
+    "name": "com.marcisd.modules.screen-handler",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ba077e9046d1840a59ff50229afd23f0",
+        "GUID:0210012cddc6b427b9fbbb209d464887"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
