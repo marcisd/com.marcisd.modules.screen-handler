@@ -35,45 +35,45 @@ namespace MSD.Modules.ScreenHandler
 		public IScreen CurrentScreen => _screenStack.Count > 0 ? _screenStack[0] : null;
 
 		/// <summary>
-		/// Hides all Screen and shows one by screenKey.
-		/// Method for UnityEvents as they don't handle more than one parameters, or unsupported types.
+		/// Hides all <see cref="IScreen"/> and shows one specified by a <see cref="ScreenKey"/>.
 		/// </summary>
-		/// <param name="screenKey">The UI to show.</param>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
 		public void ShowScreen(ScreenKey screenKey)
 		{
 			ShowScreen(screenKey, null);
 		}
 
 		/// <summary>
-		/// Hides all Screen and shows one by screenKey.
+		/// Hides all <see cref="IScreen"/> and shows one specified by a <see cref="ScreenKey"/>.
 		/// </summary>
-		/// <param name="screenKey">The UI to show.</param>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
+		/// <param name="onComplete">An event that gets triggered once the <see cref="IScreen.Show"/> routine has completed.</param>
 		public void ShowScreen(ScreenKey screenKey, Action onComplete)
 		{
 			InternalAppendScreen(screenKey, () => { HideAllScreenExcept(screenKey); }, onComplete);
 		}
 
 		/// <summary>
-		/// Adds an Screen to the stack and shows them by screenKey.
-		/// Method for UnityEvents as they don't handle more than one parameters, or unsupported types.
+		/// Adds a <see cref="IScreen"/> specified by a <see cref="ScreenKey"/> into the screen stack.
 		/// </summary>
-		/// <param name="screenKey">The UI to show.</param>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
 		public void AppendScreen(ScreenKey screenKey)
 		{
 			AppendScreen(screenKey, null);
 		}
 
 		/// <summary>
-		/// Adds an Screen to the stack and shows them by screenKey.
+		/// Adds a <see cref="IScreen"/> specified by a <see cref="ScreenKey"/> into the screen stack.
 		/// </summary>
-		/// <param name="screenKey">The UI to show.</param>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
+		/// <param name="onComplete">An event that gets triggered once the <see cref="IScreen.Show"/> routine has completed.</param>
 		public void AppendScreen(ScreenKey screenKey, Action onComplete)
 		{
 			InternalAppendScreen(screenKey, null, onComplete);
 		}
 
 		/// <summary>
-		/// Hides all screen.
+		/// Hides all shown <see cref="IScreen"/>s.
 		/// </summary>
 		public void HideAllScreen()
 		{
@@ -81,24 +81,7 @@ namespace MSD.Modules.ScreenHandler
 		}
 
 		/// <summary>
-		/// Hides all screen except one.
-		/// </summary>
-		/// <param name="screenKey"></param>
-		public void HideAllScreenExcept(ScreenKey screenKey)
-		{
-			while (_screenStack.Count > 0) {
-				TryGetScreen(screenKey, out IScreen screen);
-				if (CurrentScreen != screen) { HideCurrentScreen(); }
-				else {
-					if (_screenStack.Count > 1) { InternalHideScreen(_screenStack[1], null); }
-					else { break; }
-				}
-			}
-		}
-
-		/// <summary>
-		/// Hides the last shown screen.
-		/// Method for UnityEvents as they don't handle more than one parameters, or unsupported types.
+		/// Hides the last shown <see cref="IScreen"/>.
 		/// </summary>
 		public void HideCurrentScreen()
 		{
@@ -106,56 +89,88 @@ namespace MSD.Modules.ScreenHandler
 		}
 
 		/// <summary>
-		/// Hides the last shown screen.
+		/// Hides the last shown <see cref="IScreen"/>.
 		/// </summary>
+		/// <param name="onComplete">An event that gets triggered once the <see cref="IScreen.Hide"/> routine has completed.</param>
 		public void HideCurrentScreen(Action onComplete)
 		{
 			IScreen screen = CurrentScreen;
-			if (screen == null) { return; }
-
-			InternalHideScreen(screen, onComplete);
+			if (screen != null) {
+				InternalHideScreen(screen, onComplete);
+			}
 		}
 
 		/// <summary>
-		/// Hides a Screen by screenKey.
-		/// Method for UnityEvents as they don't handle more than one parameters, or unsupported types.
+		/// Hides the <see cref="IScreen"/> specified by a <see cref="ScreenKey"/>.
 		/// </summary>
-		/// <param name="screenKey">The Screen to hide.</param>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
 		public void HideScreen(ScreenKey screenKey)
 		{
 			HideScreen(screenKey, null);
 		}
 
 		/// <summary>
-		/// Hides a Screen by screenKey.
+		/// Hides the <see cref="IScreen"/> specified by a <see cref="ScreenKey"/>.
 		/// </summary>
-		/// <param name="screenKey">The Screen to hide.</param>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
+		/// <param name="onComplete">An event that gets triggered once the <see cref="IScreen.Hide"/> routine has completed.</param>
 		public void HideScreen(ScreenKey screenKey, Action onComplete)
 		{
-			if (!TryGetScreen(screenKey, out IScreen screen)) { return; }
-			if (!_screenStack.Contains(screen)) { return; }
+			if (TryGetScreen(screenKey, out IScreen screen)) {
+				if (_screenStack.Contains(screen)) {
+					InternalHideScreen(screen, onComplete);
+				}
+			}
+		}
 
-			InternalHideScreen(screen, onComplete);
+		/// <summary>
+		/// Checks if the <see cref="IScreen"/> specified by a <see cref="ScreenKey"/> is shown.
+		/// </summary>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
+		/// <returns><c>true</c> if shown, <c>false</c> otherwise.</returns>
+		public bool IsScreenShown(ScreenKey screenKey)
+		{
+			if (TryGetScreen(screenKey, out IScreen screen)) {
+				return _screenStack.Contains(screen);
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="IScreen"/> specified by a <see cref="ScreenKey"/>.
+		/// </summary>
+		/// <param name="screenKey">The <see cref="ScreenKey"/> associated to the <see cref="IScreen"/>.</param>
+		/// <param name="screen">When this method returns, contains the <see cref="IScreen"/> associated with the specified <see cref="ScreenKey"/>, if the key is found; otherwise, <c>null</c>.</param>
+		/// <returns><c>true</c> if a screen is found, <c>false</c> otherwise.</returns>
+		public bool TryGetScreen(ScreenKey screenKey, out IScreen screen)
+		{
+			bool result = _screensLookup.TryGetValue(screenKey, out SerializableScreen iScreen);
+			if (!result) {
+				Debugger.LogWarning(DEBUG_PREPEND, $"Screen with ScreenKey: {screenKey} doesn't exist in the lookup!");
+			}
+			screen = iScreen?.Value;
+			return result;
 		}
 
 		private void InternalAppendScreen(ScreenKey screenKey, Action onBeforeShow, Action onComplete)
 		{
-			if (!TryGetScreen(screenKey, out IScreen screen)) { return; }
+			if (TryGetScreen(screenKey, out IScreen screen)) {
 
-			onBeforeShow?.Invoke();
+				onBeforeShow?.Invoke();
 
-			if (CurrentScreen == screen) { return; }
-			if (_screenStack.Contains(screen)) { return; }
+				if (CurrentScreen == screen) { return; }
+				if (_screenStack.Contains(screen)) { return; }
 
-			screen.Show();
+				screen.Show();
 
-			// Fire and remove
-			if (onComplete != null) {
-				onComplete += () => { screen.OnShowComplete -= onComplete; };
-				screen.OnShowComplete += onComplete;
+				// Fire and remove
+				if (onComplete != null) {
+					onComplete += () => { screen.OnShowComplete -= onComplete; };
+					screen.OnShowComplete += onComplete;
+				}
+
+				_screenStack.Insert(0, screen);
 			}
-
-			_screenStack.Insert(0, screen);
 		}
 
 		private void InternalHideScreen(IScreen screen, Action onComplete)
@@ -171,14 +186,20 @@ namespace MSD.Modules.ScreenHandler
 			_screenStack.Remove(screen);
 		}
 
-		private bool TryGetScreen(ScreenKey screenKey, out IScreen screen)
+		private void HideAllScreenExcept(ScreenKey screenKey)
 		{
-			bool result = _screensLookup.TryGetValue(screenKey, out SerializableScreen iScreen);
-			if (!result) {
-				Debugger.LogWarning(DEBUG_PREPEND, $"Screen with screenKey: {screenKey} doesn't exists!");
+			while (_screenStack.Count > 0) {
+				TryGetScreen(screenKey, out IScreen screen);
+				if (CurrentScreen != screen) {
+					HideCurrentScreen();
+				} else {
+					if (_screenStack.Count > 1) {
+						InternalHideScreen(_screenStack[1], null);
+					} else {
+						break;
+					}
+				}
 			}
-			screen = iScreen?.Value;
-			return result;
 		}
 
 		private void OnShow(IScreen screen)

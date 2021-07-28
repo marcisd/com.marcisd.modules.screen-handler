@@ -20,11 +20,6 @@ namespace MSD.Modules.ScreenHandler
 		[SerializeField]
 		private bool _shouldManualInvokeCompleteEvents;
 
-		public event Action OnShow = delegate { };
-		public event Action OnShowComplete = delegate { };
-		public event Action OnHide = delegate { };
-		public event Action OnHideComplete = delegate { };
-
 		[SerializeField]
 		private UnityEvent _onShow;
 
@@ -36,6 +31,11 @@ namespace MSD.Modules.ScreenHandler
 
 		[SerializeField]
 		private UnityEvent _onHideComplete;
+
+		public event Action OnShow = delegate { };
+		public event Action OnShowComplete = delegate { };
+		public event Action OnHide = delegate { };
+		public event Action OnHideComplete = delegate { };
 
 		private Lazy<CanvasGroup> _canvasGroupLazyLoader;
 
