@@ -1,5 +1,5 @@
 {
-    "name": "com.marcisd.modules.screen-handler",
+    "name": "MSD.Modules.ScreenHandler",
     "rootNamespace": "",
     "references": [
         "GUID:ba077e9046d1840a59ff50229afd23f0",
